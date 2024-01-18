@@ -1,0 +1,34 @@
+{
+    "@odata.type": "Microsoft.Dynamics.CRM.DateTimeAttributeMetadata",
+    "SchemaName": "{{SchemaObjectName}}",
+    "AttributeType": "DateTime",
+    "AttributeTypeName": {
+        "Value": "DateTimeType"
+    },
+    "Format": "DateOnly",
+    "Description": {
+        "@odata.type": "Microsoft.Dynamics.CRM.Label",
+        "LocalizedLabels": [
+            {
+                "@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel",
+                "Label": "{{Description}}",
+                "LanguageCode": 1033
+            }
+        ]
+    },
+    "DisplayName": {
+        "@odata.type": "Microsoft.Dynamics.CRM.Label",
+        "LocalizedLabels": [
+            {
+                "@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel",
+                "Label": "{{DisplayName}}",
+                "LanguageCode": 1033
+            }
+        ]
+    },
+    "RequiredLevel": {
+        "Value": "None",
+        "CanBeChanged": true,
+        "ManagedPropertyLogicalName": "canmodifyrequirementlevelsettings"
+    }
+}

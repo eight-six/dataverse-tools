@@ -1,0 +1,12 @@
+{
+  "@odata.type": "Microsoft.Dynamics.CRM.DecimalAttributeMetadata",
+  "AttributeType": "Decimal",
+  "AttributeTypeName": {
+    "Value": "DecimalType"
+  },
+}
+
+
+  "MaxValue": 100.0,
+  "MinValue": 0.0,
+  "Precision": 1,
