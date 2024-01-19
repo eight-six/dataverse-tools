@@ -20,7 +20,7 @@ function FlattenForOutput {
 
     $Headers.Keys | % {
         if ($_ -in $SensitiveKeys) {
-            $Copy.Add($_, "*******")
+            $Copy.Add($_, '*******')
         }
         else {
             $Copy.Add($_, $Headers[$_])
@@ -36,7 +36,7 @@ function Invoke-ApiRequest {
     param (
         [string]$Action,
 
-        [ValidateSet('GET', 'POST')]
+        [ValidateSet('GET', 'POST', 'PUT')]
         [string]$Method = 'GET',
 
         [object]$Body = $null,
@@ -87,13 +87,13 @@ function Invoke-ApiRequest {
 
 function Get-AuthToken {
     param (
-        [securestring]$Token,
         [switch]$AsPlainText
     )
+    $Creds = Import-Clixml -Path ~/.dataverse-tools
 
     $Ret = ($AsPlainText.IsPresent ? 
-                ($Script:AuthToken | ConvertFrom-SecureString -AsPlainText) :
-        $Script:AuthToken
+            ($Creds.Password | ConvertFrom-SecureString -AsPlainText) :
+            $Creds.Password
     )
 
     Return $Ret        
@@ -101,7 +101,7 @@ function Get-AuthToken {
 
 # https://learn.microsoft.com/en-us/power-apps/developer/data-platform/webapi/retrieve-metadata-name-metadataid
 function Get-Entity {
-    [CmdletBinding(DefaultParameterSetName="Default")]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param(
         [Parameter(ParameterSetName = 'ByLogicalName')]
         [string]$LogicalName,
@@ -112,19 +112,32 @@ function Get-Entity {
 
         [Parameter(ParameterSetName = 'Default')]
         [Parameter(ParameterSetName = 'ByLogicalName')]
+        [string]$Filter,
+
+        [Parameter(ParameterSetName = 'Default')]
+        [Parameter(ParameterSetName = 'ByLogicalName')]
         [switch]$Raw
     )
 
     #$select=DisplayName,IsKnowledgeManagementEnabled,EntitySetName
-
-    $Action = "EntityDefinitions(LogicalName='$LogicalName')"
+    #$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'
+    if($LogicalName.Length -gt 0){
+        $Action = "EntityDefinitions(LogicalName='$LogicalName')"
+    } else {
+        $Action = "EntityDefinitions"
+    }
 
     if ($Select.Length -gt 0) {
         $Action += "?`$select=$($Select -join ',')"
     }
 
+    if ($Filter.Length -gt 0) {
+        $Action += "&`$filter=$($Filter -join ',')"
+    }
     Invoke-ApiRequest -Action $Action -Raw:($Raw.IsPresent)
 }
+
+
 
 # https://learn.microsoft.com/en-us/power-apps/developer/data-platform/webapi/retrieve-metadata-name-metadataid
 function Get-EntityAttribute {
@@ -171,25 +184,42 @@ function New-Entity {
     Invoke-ApiRequest -Method 'POST' -Action 'EntityDefinitions' -Body $EntityDefinition
 }
 
-function Remove-Entity {
-    throw "Not implemented"
+function Set-Entity {
+    param(
+        [Parameter(ParameterSetName = 'FromHashtable')]
+        [hashtable]$EntityDefinition,
+
+        [Parameter(Mandatory=$true,ParameterSetName = 'FromJson')]
+        [string]$LogicalName,
+
+        [Parameter(Mandatory=$true,ParameterSetName = 'FromJson')]
+        [string]$JsonDefinition
+        
+    )
+
+    if($PSCmdlet.ParameterSetName -eq 'FromHashtable'){
+        $LogicalName = $EntityDefinition.LogicalName
+        $JsonDefinition = $EntityDefinition | ConvertTo-Json -Depth 99
+    }
+
+    Invoke-ApiRequest -Method 'PUT' -Action "EntityDefinitions(LogicalName='$LogicalName')" -Body $JsonDefinition
 }
 
-function Set-Entity {
-    throw "Not implemented"
+function Remove-Entity {
+    throw 'Not implemented'
 }
 
 function New-EntityAttribute {
-    throw "Not implemented"
+    throw 'Not implemented'
 
 }
 
 function Remove-EntityAttribute {
-    throw "Not implemented"
+    throw 'Not implemented'
 }
 
 function Set-EntityAttribute {
-    throw "Not implemented"
+    throw 'Not implemented'
 }
 
 
@@ -198,7 +228,9 @@ function Set-AuthToken {
         [securestring]$Token
     )
 
-    $Script:AuthToken = $Token
+    #$Password = ConvertFrom-SecureString $Token -AsPlainText
+    $Cred = New-Object 'System.Management.Automation.PSCredential' ('<not-used>', $Token)
+    $Cred | Export-Clixml -Path ~/.dataverse-tools
 
 }
 
@@ -213,7 +245,7 @@ function Set-OrganisationUri {
 }
 
 
-function TestyMcTest{
+function TestyMcTest {
 
     
 }

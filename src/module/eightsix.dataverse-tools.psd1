@@ -78,6 +78,7 @@
         'Invoke-ApiRequest'
         'New-Entity'
         'Set-AuthToken'
+        'Set-Entity'
         'Set-OrganisationUri'
     )
 

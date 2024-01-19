@@ -1,79 +1,78 @@
-{  
-  "@odata.type": "Microsoft.Dynamics.CRM.EntityMetadata",  
-
-  "Attributes": [  
-  {  
-   "AttributeType": "String",  
-   "AttributeTypeName": {  
-    "Value": "StringType"  
-   },  
-   "Description": {  
-     "@odata.type": "Microsoft.Dynamics.CRM.Label",  
-    "LocalizedLabels": [  
-     {  
-       "@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel",  
-      "Label": "Type the name of the bank account",  
-      "LanguageCode": 1033  
-     }  
-    ]  
-   },  
-   "DisplayName": {  
-     "@odata.type": "Microsoft.Dynamics.CRM.Label",  
-    "LocalizedLabels": [  
-     {  
-       "@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel",  
-      "Label": "Account Name",  
-      "LanguageCode": 1033  
-     }  
-    ]  
-   },  
-   "IsPrimaryName": true,  
-   "RequiredLevel": {  
-    "Value": "None",  
-    "CanBeChanged": true,  
-    "ManagedPropertyLogicalName": "canmodifyrequirementlevelsettings"  
-   },  
-   "SchemaName": "new_AccountName",  
-    "@odata.type": "Microsoft.Dynamics.CRM.StringAttributeMetadata",  
-   "FormatName": {  
-    "Value": "Text"  
-   },  
-   "MaxLength": 100  
-  }  
- ],  
- "Description": {  
-   "@odata.type": "Microsoft.Dynamics.CRM.Label",  
-  "LocalizedLabels": [  
-   {  
-     "@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel",  
-    "Label": "An entity to store information about customer bank accounts",  
-    "LanguageCode": 1033  
-   }  
-  ]  
- },  
- "DisplayCollectionName": {  
-   "@odata.type": "Microsoft.Dynamics.CRM.Label",  
-  "LocalizedLabels": [  
-   {  
-     "@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel",  
-    "Label": "Bank Accounts",  
-    "LanguageCode": 1033  
-   }  
-  ]  
- },  
- "DisplayName": {  
-   "@odata.type": "Microsoft.Dynamics.CRM.Label",  
-  "LocalizedLabels": [  
-   {  
-     "@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel",  
-    "Label": "Bank Account",  
-    "LanguageCode": 1033  
-   }  
-  ]  
- },  
- "HasActivities": false,  
- "HasNotes": false,  
- "IsActivity": false,  
- "OwnershipType": "UserOwned",  
- "SchemaName": "new_BankAccount"  
+{
+  "@odata.type": "Microsoft.Dynamics.CRM.EntityMetadata",
+  "Attributes": [
+    {
+      "AttributeType": "String",
+      "AttributeTypeName": {
+        "Value": "StringType"
+      },
+      "Description": {
+        "@odata.type": "Microsoft.Dynamics.CRM.Label",
+        "LocalizedLabels": [
+          {
+            "@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel",
+            "Label": "Type the name of the bank account",
+            "LanguageCode": 1033
+          }
+        ]
+      },
+      "DisplayName": {
+        "@odata.type": "Microsoft.Dynamics.CRM.Label",
+        "LocalizedLabels": [
+          {
+            "@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel",
+            "Label": "Account Name",
+            "LanguageCode": 1033
+          }
+        ]
+      },
+      "IsPrimaryName": true,
+      "RequiredLevel": {
+        "Value": "None",
+        "CanBeChanged": true,
+        "ManagedPropertyLogicalName": "canmodifyrequirementlevelsettings"
+      },
+      "SchemaName": "new_AccountName",
+      "@odata.type": "Microsoft.Dynamics.CRM.StringAttributeMetadata",
+      "FormatName": {
+        "Value": "Text"
+      },
+      "MaxLength": 100
+    }
+  ],
+  "Description": {
+    "@odata.type": "Microsoft.Dynamics.CRM.Label",
+    "LocalizedLabels": [
+      {
+        "@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel",
+        "Label": "An entity to store information about customer bank accounts",
+        "LanguageCode": 1033
+      }
+    ]
+  },
+  "DisplayCollectionName": {
+    "@odata.type": "Microsoft.Dynamics.CRM.Label",
+    "LocalizedLabels": [
+      {
+        "@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel",
+        "Label": "Bank Accounts",
+        "LanguageCode": 1033
+      }
+    ]
+  },
+  "DisplayName": {
+    "@odata.type": "Microsoft.Dynamics.CRM.Label",
+    "LocalizedLabels": [
+      {
+        "@odata.type": "Microsoft.Dynamics.CRM.LocalizedLabel",
+        "Label": "Bank Account",
+        "LanguageCode": 1033
+      }
+    ]
+  },
+  "HasActivities": false,
+  "HasNotes": false,
+  "IsActivity": false,
+  "OwnershipType": "UserOwned",
+  "SchemaName": "new_BankAccount"
 }
