@@ -8,7 +8,7 @@
             "name": "PowerShell Launch Script",
             "type": "PowerShell",
             "request": "launch",
-            "script": "${workspaceFolder}/src/module/eightsix.dataverse-tools.psd1",
+            "script": "${workspaceFolder}/src/modules/eight-six.dataverse-tools/eight-six.dataverse-tools.psd1",
             "cwd": "${workspaceFolder}"
         },
         {
