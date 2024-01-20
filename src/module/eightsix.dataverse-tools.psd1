@@ -51,7 +51,9 @@
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    # RequiredModules = @()
+    RequiredModules = @(
+        'Az.Accounts'
+    )
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()
@@ -67,6 +69,7 @@
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
     NestedModules        = @(
+        'auth.psm1'
         'environment.psm1'
     )
 
@@ -84,7 +87,10 @@
         'Set-OrganisationUri'
         'Add-Environment'
         'Get-Environment'
+        'Select-Environment'
         'Set-Environment'
+        # 
+        'Test-McTestFace'
     )
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.

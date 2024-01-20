@@ -1,9 +1,10 @@
 $ErrorActionPreference = "Stop"
 
-if($null -eq $env:PWAPPS_ENVIRONMENT_URI){
-    throw "`$Env:PWAPPS_ENVIRONMENT_URI is not set. Please set it to the URI of your Power Apps environment."
+if($null -eq $env:DVT_ENVIRONMENT){
+    throw "`$Env:DVT_ENVIRONMENT is not set. Please set it to the name of a defined environment."
 }
 
-import-module .\src\module\eightsix.dataverse-tools.psd1 -Force
-Set-DvOrganisationUri -Uri  "$env:PWAPPS_ENVIRONMENT_URI"
-Get-DvWhoAmI 
+$Env:DV_PROMPT_FOR_AUTH_TOKEN = 'true'
+Import-Module .\src\module\eightsix.dataverse-tools.psd1 -Force
+Select-DvEnvironment -FriendlyName $env:DVT_ENVIRONMENT
+Get-DvWhoAmI | Format-List

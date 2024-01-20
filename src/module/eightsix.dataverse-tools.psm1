@@ -1,6 +1,4 @@
-[securestring]$Script:AuthToken
-$Script:OrgUri = 'missing'
-$ApiPath = 'api/data/v9.2'
+$Script:ApiPath = 'api/data/v9.2'
 
 function CompressJsonForOutput {
     param(
@@ -44,15 +42,23 @@ function Invoke-ApiRequest {
         [switch]$Raw
     )
     
+    $Environment = Get-Environment -Current
+
+    if ($null -eq $Environment) {
+        throw 'No environment selected. Use Select-Environment to select one.'
+    }
+    
+    $AuthToken = Get-AuthToken -ResourceUrl $Environment.Uri
+
     # check - no body with GET
 
-    $Uri = $Script:OrgUri, $ApiPath, $Action -Join '/'
+    $Uri = $Environment.Uri, $ApiPath, $Action -Join '/'
     
     Write-Verbose "Uri: $Uri" -Verbose
     Write-Verbose "Method: $Method" -Verbose
 
     $Headers = @{
-        Authorization      = "Bearer $(Get-AuthToken -AsPlainText)"
+        Authorization      = "Bearer $AuthToken"
         Accept             = 'application/json'  
         'OData-MaxVersion' = '4.0' 
         'OData-Version'    = '4.0'
@@ -85,19 +91,6 @@ function Invoke-ApiRequest {
     $Raw.IsPresent ? $Response.Content : ($Response.Content | ConvertFrom-Json)
 }
 
-function Get-AuthToken {
-    param (
-        [switch]$AsPlainText
-    )
-    $Creds = Import-Clixml -Path ~/.dataverse-tools
-
-    $Ret = ($AsPlainText.IsPresent ? 
-            ($Creds.Password | ConvertFrom-SecureString -AsPlainText) :
-            $Creds.Password
-    )
-
-    Return $Ret        
-}
 
 # https://learn.microsoft.com/en-us/power-apps/developer/data-platform/webapi/retrieve-metadata-name-metadataid
 function Get-Entity {
@@ -162,13 +155,6 @@ function Get-EntityAttribute {
     Invoke-ApiRequest -Action $Action -Raw:($Raw.IsPresent)
 }
 
-function Get-OrganisationUri {
-    param(
-    )
-
-    $Script:OrgUri
-}
-
 function Get-WhoAmI {
     param()
 
@@ -223,29 +209,28 @@ function Set-EntityAttribute {
 }
 
 
-function Set-AuthToken {
+# function Set-AuthToken {
+#     param (
+#         [Parameter(ParameterSetName='WithToken', Mandatory=$true)]
+#         [securestring]$Token,
+
+#         [Parameter(ParameterSetName='Prompt', Mandatory=$true)]
+#         [switch]$Prompt
+#     )
+
+#     if($PSCmdlet.ParameterSetName -eq 'Prompt'){
+#         $Token = read-host -AsSecureString -Prompt 'Token'
+#     }
+
+#     $Cred = New-Object 'System.Management.Automation.PSCredential' ('<not-used>', $Token)
+#     $Cred | Export-Clixml -Path $Script:TokenPath
+
+# }
+
+function Test-McTestFace {
     param (
-        [securestring]$Token
+        
     )
 
-    #$Password = ConvertFrom-SecureString $Token -AsPlainText
-    $Cred = New-Object 'System.Management.Automation.PSCredential' ('<not-used>', $Token)
-    $Cred | Export-Clixml -Path ~/.dataverse-tools
-
-}
-
-function Set-OrganisationUri {
-    param(
-        [Parameter(Mandatory, Position = 0)]
-        [ValidateScript({ $_ -match 'https://[a-z0-9]+.api.crm[0-9]{0,2}.dynamics.com' })]
-        [string]$Uri
-    )
-
-    $Script:OrgUri = $Uri
-}
-
-
-function TestyMcTest {
-
-    
+    Get-Environment -Current
 }
