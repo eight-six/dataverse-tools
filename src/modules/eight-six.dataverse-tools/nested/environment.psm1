@@ -1,6 +1,21 @@
 $Script:ConfigFolder = '~/.dataverse-tools'
 $Script:CurrentEnvironment = $null
 
+$EnvironmentNameCompleter = {
+    param ( 
+        $commandName,
+        $parameterName,
+        $wordToComplete,
+        $commandAst,
+        $fakeBoundParameters
+    )
+    $ConfigFolder = '~/.dataverse-tools'
+    $Names = Get-ChildItem -Path $ConfigFolder -Filter '*.environment.xml' | ForEach-Object {
+        $_.Name -replace '.environment.xml', ''
+    }
+    $Names | Where-Object { $_ -like "$wordToComplete*" }
+}
+
 function Add-Environment {
     param(
         [Parameter(Mandatory, Position = 0)]
@@ -47,19 +62,6 @@ function Get-Environment {
     param(
         [Parameter(Mandatory = $false, Position = 0)]
         [ValidateNotNullOrWhiteSpace()]
-        [ArgumentCompleter( {
-                param ( $commandName,
-                    $parameterName,
-                    $wordToComplete,
-                    $commandAst,
-                    $fakeBoundParameters )
-
-                $Names = Get-ChildItem -Path $Script:ConfigFolder -Filter '*.environment.xml' | ForEach-Object {
-                    $_.Name -replace '.environment.xml', ''
-                }
-                $Names | Where-Object { $_ -like "$wordToComplete*" }
-
-            } )]
         [string]$FriendlyName,
 
         [switch]$Current
@@ -192,10 +194,11 @@ function Select-Environment {
     $FilePath = Get-EnvironmentFilePath -FriendlyName $FriendlyName
 
     if (!(Test-Path $FilePath)) {
-        throw "Environment with friendly name '$FriendlyName' does not exist. Use Add-Enironment or Set-Environment to create it."
+        throw "Environment with friendly name '$FriendlyName' does not exist. Use Add-Environment or Set-Environment to create it."
     }
 
     $Script:CurrentEnvironment = Import-Clixml -Path $FilePath
 
 }
 
+Export-ModuleMember -Variable 'EnvironmentNameCompleter' -Function '*'

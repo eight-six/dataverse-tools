@@ -55,8 +55,8 @@
         'Get-WhoAmI'
         'Invoke-ApiRequest'
         'New-Entity'
+        'Register-ArgumentCompleter'
         'Set-Entity'
-
         #from nested/environment.psm1
         'Add-Environment'
         'Get-Environment'

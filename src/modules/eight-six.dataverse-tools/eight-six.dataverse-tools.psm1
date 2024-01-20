@@ -202,5 +202,15 @@ function Test-McTestFace {
         
     )
 
-    Get-Environment -Current
+    Write-Verbose "$($MyInvocation.MyCommand.ScriptBlock.Module)" -Verbose
 }
+
+function Register-ArgumentCompleter{
+    $Prefix = $MyInvocation.MyCommand.ScriptBlock.Module.Prefix
+    "Get-$($Prefix)Environment", "Set-$($Prefix)Environment", "Remove-$($Prefix)Environment" | ForEach-Object {
+        Microsoft.PowerShell.Core\Register-ArgumentCompleter -CommandName $_ -ParameterName 'FriendlyName' -ScriptBlock $EnvironmentNameCompleter
+    }
+}
+
+Write-Verbose "$($PSScriptRoot)" -Verbose
+Write-Verbose "$($MyInvocation.Statement)" -Verbose
