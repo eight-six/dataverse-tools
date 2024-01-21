@@ -72,7 +72,7 @@ NestedModules = @('./nested/auth.psm1',
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = 'Get-Entity', 'Get-EntityAttribute', 'Get-WhoAmI', 'Invoke-ApiRequest', 
-               'New-Entity', 'Register-ArgumentCompleter', 'Set-Entity', 
+               'New-Entity', 'Set-Entity', 
                'Add-Environment', 'Get-Environment', 'Remove-Environment', 
                'Select-Environment', 'Set-Environment', 'Test-McTestFace'
 

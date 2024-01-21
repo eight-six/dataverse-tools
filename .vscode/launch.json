@@ -20,7 +20,7 @@
             "cwd": "${workspaceFolder}"
         },
         {
-            "name": "PowerShell: Run Pester Tests",
+            "name": "Run Pester Tests",
             "type": "PowerShell",
             "request": "launch",
             "script": "Invoke-Pester",

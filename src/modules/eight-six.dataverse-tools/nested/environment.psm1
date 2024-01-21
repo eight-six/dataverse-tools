@@ -1,21 +1,6 @@
 $Script:ConfigFolder = '~/.dataverse-tools'
 $Script:CurrentEnvironment = $null
 
-$EnvironmentNameCompleter = {
-    param ( 
-        $commandName,
-        $parameterName,
-        $wordToComplete,
-        $commandAst,
-        $fakeBoundParameters
-    )
-    $ConfigFolder = '~/.dataverse-tools'
-    $Names = Get-ChildItem -Path $ConfigFolder -Filter '*.environment.xml' | ForEach-Object {
-        $_.Name -replace '.environment.xml', ''
-    }
-    $Names | Where-Object { $_ -like "$wordToComplete*" }
-}
-
 function Add-Environment {
     param(
         [Parameter(Mandatory, Position = 0)]
@@ -62,6 +47,7 @@ function Get-Environment {
     param(
         [Parameter(Mandatory = $false, Position = 0)]
         [ValidateNotNullOrWhiteSpace()]
+        [ArgumentCompleter({"{{EnvironmentNameCompleter}}"})]
         [string]$FriendlyName,
 
         [switch]$Current
@@ -90,6 +76,18 @@ function Get-EnvironmentFilePath {
     param(
         [Parameter(Mandatory = $true, Position = 0)]
         [ValidateNotNullOrWhiteSpace()]
+        [ArgumentCompleter( {
+                param (
+                    $commandName,
+                    $parameterName,
+                    $wordToComplete,
+                    $commandAst,
+                    $fakeBoundParameters 
+                )
+
+                GetEnvionmentNameCompletions @PSBoundParameters
+            } 
+        )]
         [string]$FriendlyName
     )
 
@@ -100,6 +98,7 @@ function Remove-Environment {
     param(
         [Parameter(Mandatory, Position = 0)]
         [ValidateNotNullOrWhiteSpace()]
+        [ArgumentCompleter({"{{EnvironmentNameCompleter}}"})]
         [string]$FriendlyName
     )
 
@@ -117,16 +116,7 @@ function Set-Environment {
     param(
         [Parameter(Mandatory, Position = 0)]
         [ValidateNotNullOrWhiteSpace()]
-        [ArgumentCompleter( {
-                param ( $commandName,
-                    $parameterName,
-                    $wordToComplete,
-                    $commandAst,
-                    $fakeBoundParameters )
-
-                $Names = Get-ChildItem -Path $Script:ConfigFolder -Filter '*.environment.xml' | select -ExpandProperty Name
-                $Names | Where-Object { $_ -like "$wordToComplete*" }
-            } )]
+        [ArgumentCompleter({"{{EnvironmentNameCompleter}}"})]
         [string]$FriendlyName,
         [Parameter(Mandatory = $false, Position = 1)]
         [ValidatePattern('https://[a-z0-9]+.api.crm[0-9]{0,2}.dynamics.com')]
@@ -188,6 +178,7 @@ function Select-Environment {
     param(
         [Parameter(Mandatory = $false, Position = 0)]
         [ValidateNotNullOrWhiteSpace()]
+        [ArgumentCompleter({"{{EnvironmentNameCompleter}}"})]
         [string]$FriendlyName
     )
 
@@ -200,5 +191,3 @@ function Select-Environment {
     $Script:CurrentEnvironment = Import-Clixml -Path $FilePath
 
 }
-
-Export-ModuleMember -Variable 'EnvironmentNameCompleter' -Function '*'

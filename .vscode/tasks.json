@@ -6,7 +6,7 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "bundle/bundle.ps1",
+            "command": "tasks/build.ps1",
             "group": {
                 "kind": "build"
             }
@@ -14,7 +14,7 @@
         {
             "label": "clean",
             "type": "shell",
-            "command": "bundle/clean.ps1",
+            "command": "tasks/clean.ps1",
             "group": {
                 "kind": "build"
             }
@@ -22,16 +22,24 @@
         {
             "label": "clean+build",
             "type": "shell",
-            "command": "bundle/clean.ps1;bundle/bundle.ps1",
+            "command": "tasks/clean.ps1;tasks/build.ps1",
             "group": {
                 "kind": "build",
                 "isDefault": true
             }
         },
         {
+            "label": "bundle",
+            "type": "shell",
+            "command": "tasks/bundle.ps1",
+            "group": {
+                "kind": "build"
+            }
+        },
+        {
             "label": "import-module",
             "type": "shell",
-            "command": "bundle/import.ps1",
+            "command": "tasks/import.ps1",
             "group": {
                 "kind": "build"
             }
