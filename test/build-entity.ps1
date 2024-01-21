@@ -1,16 +1,18 @@
+param (
+    [switch]$Create
+)
+
 $ErrorActionPreference = 'Stop'
 
-. "$PSScriptRoot\test-bootstrap.ps1"
-. "$PSScriptRoot\..\src\module\builder.ps1"
-
-$Create = $false
+# . "$PSScriptRoot\test-bootstrap.ps1"
+. "$PSScriptRoot\..\src\modules\eight-six.dataverse-tools\nested\builder.ps1"
 
 $EntityParams = [ordered]@{
-    LogicalName           = 'cr86f_test_entity' 
-    SchemaName            = 'cr86f_test_entity' 
-    DisplayName           = 'Test Entity' 
-    Description           = 'Test Entity created via API'
-    DisplayCollectionName = 'Test Entities' 
+    LogicalName           = 'cr86f_lorem_ipsum' 
+    SchemaName            = 'cr86f_lorem_ipsum' 
+    DisplayName           = 'Lorem Ipsum' 
+    Description           = 'Lorem Ipsum created via API'
+    DisplayCollectionName = 'Lorem Ipsums' 
     # PrimaryIdAttribute = "cr86f_testentityid" 
     # PrimaryNameAttribute "cr86f_name" 
     #SchemaNamePrefix = "cr86f" 
@@ -70,13 +72,12 @@ $Attributes = @(
     New-StringAttributeDefinition @GivenNameAttributeParams -AsHashtable
     New-DateTimeAttributeDefinition @DateOfBirthAttributeParams -AsHashtable
     New-IntegerAttributeDefinition @CommuteAttributeParams -AsHashtable
-    New-BooleanAttributeDefinition @IsActiveAttributeParams -AsHashtable
+    # New-BooleanAttributeDefinition @IsActiveAttributeParams -AsHashtable
 )
 
 $EntityDefinition = New-EntityDefinition @EntityParams -AttributeDefinition $Attributes
-# $EntityDefinition  | scb 
-
-if ($Create) {
+# $EntityDefinition  | scb
+if ($Create.IsPresent) {
     New-DvEntity -EntityDefinition $EntityDefinition 
 }
 else {

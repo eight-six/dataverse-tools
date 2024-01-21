@@ -2,7 +2,7 @@ $ErrorActionPreference = 'Stop'
 
 # $BuildDir = "$PSScriptRoot/../build"
 $BuildDir = "./build/"
-$ModuleVersion = $Env:BUILD_MODULE_VERSION ??  '98.99.99'
+$ModuleVersion = $Env:BUILD_MODULE_VERSION ??  '99.99.99'
 $ModuleName = 'eight-six.dataverse-tools'
 $ModuleBuildPath = "$BuildDir/tmp"
 $ModuleVersionedPath = "$BuildDir/$ModuleVersion"

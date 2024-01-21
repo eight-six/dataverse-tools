@@ -94,7 +94,7 @@ function Get-BasicAttributeDefintion {
 
 function Add-Description {
     param (
-        [hashtable]$Definition,
+       [object]$Definition,
         [string]$Description
     )
 
@@ -111,7 +111,7 @@ function Add-Description {
 }
 function Add-DisplayName {
     param (
-        [hashtable]$Definition,
+       [object]$Definition,
         [string]$DisplayName
     )
 
@@ -129,7 +129,7 @@ function Add-DisplayName {
 
 function Add-RequiredLevel {
     param (
-        [hashtable]$Definition,
+       [object]$Definition,
         [string]$RequiredLevel
     )
 
@@ -184,9 +184,9 @@ function New-StringAttributeDefinition {
             Value = $FormatName
         }
     }
-    Add-DisplayName $Ret
-    Add-Description $Ret
-    Add-RequiredLevel $Ret
+    Add-DisplayName $Ret $DisplayName
+    Add-Description $Ret $Description
+    Add-RequiredLevel $Ret $RequiredLevel
 
     $AsHashtable.IsPresent ?  $Ret : ($Ret | ConvertTo-Json -Depth 99) 
 }
