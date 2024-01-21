@@ -1,3 +1,5 @@
+$ErrorActionPreference = 'Stop'
+
 function CompressJsonForOutput {
     param(
         [string]$Json
@@ -14,12 +16,12 @@ function FlattenForOutput {
 
     $Copy = [ordered]@{}
 
-    $Headers.Keys | % {
+    $Hashtable.Keys | % {
         if ($_ -in $SensitiveKeys) {
             $Copy.Add($_, '*******')
         }
         else {
-            $Copy.Add($_, $Headers[$_])
+            $Copy.Add($_, $Hashtable[$_])
         }
     }
     

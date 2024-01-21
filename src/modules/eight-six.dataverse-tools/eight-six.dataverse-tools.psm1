@@ -22,7 +22,7 @@ function Invoke-ApiRequest {
 
     # check - no body with GET
 
-    $Uri = $Environment.Uri, $ApiPath, $Action -Join '/'
+    $Uri = $Environment.ApiUri, $Action -Join '/'
     
     Write-Verbose "Uri: $Uri" -Verbose
     Write-Verbose "Method: $Method" -Verbose

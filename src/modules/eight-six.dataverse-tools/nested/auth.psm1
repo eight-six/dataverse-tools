@@ -17,12 +17,12 @@ function Get-AuthToken {
     if ($ForceRefresh.IsPresent -or $null -eq $Script:AccessToken -or $Script:AccessToken.ExpiresOn -lt (Get-Date)) {
         Write-Verbose "Getting new access token for $ResourceUrl" -Verbose
         $AccessToken = Get-AzAccessToken -ResourceUrl $ResourceUrl
+        $Script:AccessToken = $NoCache.IsPresent ? $null : $AccessToken
     }
     else {
         Write-Verbose "Using cached access token for $ResourceUrl" -Verbose
+        $AccessToken = $Script:AccessToken
     }
-
-    $Script:AccessToken = $NoCache.IsPresent ? $null : $AccessToken
 
     $AccessToken.Token
 }
