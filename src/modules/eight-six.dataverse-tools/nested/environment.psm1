@@ -7,7 +7,7 @@ function Add-Environment {
         [ValidateNotNullOrWhiteSpace()]
         [string]$FriendlyName,
         [Parameter(Mandatory, Position = 1)]
-        [ValidatePattern('https://[a-z0-9]+.api.crm[0-9]{0,2}.dynamics.com')]
+        [ValidatePattern('https://[a-z0-9]+.crm[0-9]{0,2}.dynamics.com')]
         [string]$Uri,
         [Parameter(Mandatory, Position = 2)]
         [ValidateNotNullOrWhiteSpace()]
@@ -17,7 +17,10 @@ function Add-Environment {
         [string]$ApiPath = 'api/data',
         [Parameter(Mandatory = $false, Position = 4)]
         [ValidatePattern('v[0-9]+\.[0-9]+$')]
-        [string]$ApiVersion = 'v9.2'
+        [string]$ApiVersion = 'v9.2',
+        [Parameter(Mandatory = $false, Position = 5)]
+        [ValidatePattern('[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}')]
+        [string]$EnvironmentId
     )
 
     $FilePath = Get-EnvironmentFilePath -FriendlyName $FriendlyName
@@ -26,13 +29,27 @@ function Add-Environment {
         throw "Environment with friendly name '$FriendlyName' already exists. Use Set-Environment to update it."
     }
 
+    $EnvironmentUri = 'https://admin.powerplatform.microsoft.com/environments/environment/{{EnvironmentId}}/hub'
+    $MakeUri = "https://make.powerapps.com/environments/{{EnvironmentId}}/home"
+    
+    if ( $EnvironmentId.Length -gt 0) {
+        $EnvironmentUri = $EnvironmentUri -replace '{{EnvironmentId}}', $EnvironmentId
+        $MakeUri = "https://make.powerapps.com/environments/$EnvironmentId/home"
+    }
+
+    $ApiUri = "$($Uri -replace '\.crm', '.api.crm')/$ApiPath/$ApiVersion"
+        
     $Environment = [PSCustomObject]@{
-        FriendlyName = $FriendlyName
-        Uri          = $Uri
-        Solution     = $Solution
-        ApiPath      = $ApiPath
-        ApiVersion   = $ApiVersion
-        ApiUri       = "$Uri/$ApiPath/$ApiVersion"
+        FriendlyName        = $FriendlyName
+        Uri                 = $Uri
+        Solution            = $Solution
+        ApiPath             = $ApiPath
+        ApiVersion          = $ApiVersion
+        ApiUri              = $ApiUri 
+        EnvironmentId       = $EnvironmentId
+        EnvironmentUri      = $EnvironmentUri 
+        MakeUri             = $MakeUri  
+        AdvancedSettingsUri = "$Uri/main.aspx?settingsonly=true"
     }
 
     if (!(Test-Path $Script:ConfigFolder -PathType 'Container' -ErrorAction 'SilentlyContinue')) {
@@ -47,7 +64,7 @@ function Get-Environment {
     param(
         [Parameter(Mandatory = $false, Position = 0)]
         [ValidateNotNullOrWhiteSpace()]
-        [ArgumentCompleter({"{{EnvironmentNameCompleter}}"})]
+        [ArgumentCompleter({ '{{EnvironmentNameCompleter}}' })]
         [string]$FriendlyName,
 
         [switch]$Current
@@ -98,7 +115,7 @@ function Remove-Environment {
     param(
         [Parameter(Mandatory, Position = 0)]
         [ValidateNotNullOrWhiteSpace()]
-        [ArgumentCompleter({"{{EnvironmentNameCompleter}}"})]
+        [ArgumentCompleter({ '{{EnvironmentNameCompleter}}' })]
         [string]$FriendlyName
     )
 
@@ -116,7 +133,7 @@ function Set-Environment {
     param(
         [Parameter(Mandatory, Position = 0)]
         [ValidateNotNullOrWhiteSpace()]
-        [ArgumentCompleter({"{{EnvironmentNameCompleter}}"})]
+        [ArgumentCompleter({ '{{EnvironmentNameCompleter}}' })]
         [string]$FriendlyName,
         [Parameter(Mandatory = $false, Position = 1)]
         [ValidatePattern('https://[a-z0-9]+.api.crm[0-9]{0,2}.dynamics.com')]
@@ -129,7 +146,10 @@ function Set-Environment {
         [string]$ApiPath = 'api/data',
         [Parameter(Mandatory = $false, Position = 4)]
         [ValidatePattern('v[0-9]+\.[0-9]+$')]
-        [string]$ApiVersion = 'v9.2'
+        [string]$ApiVersion = 'v9.2',
+        [Parameter(Mandatory = $false, Position = 5)]
+        [ValidatePattern('[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}')]
+        [string]$EnvironmentId
     )
 
     $FilePath = Get-EnvironmentFilePath -FriendlyName $FriendlyName
@@ -165,6 +185,12 @@ function Set-Environment {
             $Environment.ApiUri = "$($Environment.Uri)/$($Environment.ApiPath)/$($Environment.ApiVersion)"
         }
 
+        $EnvironmentIdUri = 'https://admin.powerplatform.microsoft.com/environments/environment/{{EnvironmentId}}}/hub'
+
+        if ( $EnvironmentId.Length -gt 0) {
+            $Environment.EnvironmentUri = $EnvironmentIdUri -replace '{{EnvironmentId}}', $EnvironmentId
+        }
+
         if (!(Test-Path $Script:ConfigFolder -PathType 'Container' -ErrorAction 'SilentlyContinue')) {
             New-Item -Path $Script:ConfigFolder -ItemType 'Directory' -Force | Out-Null
         }
@@ -178,7 +204,7 @@ function Select-Environment {
     param(
         [Parameter(Mandatory = $false, Position = 0)]
         [ValidateNotNullOrWhiteSpace()]
-        [ArgumentCompleter({"{{EnvironmentNameCompleter}}"})]
+        [ArgumentCompleter({ '{{EnvironmentNameCompleter}}' })]
         [string]$FriendlyName
     )
 

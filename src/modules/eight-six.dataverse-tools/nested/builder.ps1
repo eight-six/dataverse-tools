@@ -306,7 +306,6 @@ function New-DateTimeAttributeDefinition {
     
     $AsHashtable.IsPresent ?  $Ret : ($Ret | ConvertTo-Json -Depth 99) 
 }
-
 function New-IntegerAttributeDefinition {
     param(
         [Parameter(Mandatory = $true)]
@@ -352,3 +351,96 @@ function New-IntegerAttributeDefinition {
     
     $AsHashtable.IsPresent ?  $Ret : ($Ret | ConvertTo-Json -Depth 99) 
 }
+function New-MemoAttributeDefinition {
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern('^[a-z][a-z0-9_]+[a-z0-9]$')]
+        [string]$LogicalName,
+        
+        [Parameter(Mandatory = $false)]
+        [string]$SchemaName = $LogicalName,
+        
+        [Parameter(Mandatory = $true)]
+        [string]$DisplayName,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Description,
+
+        [Parameter(Mandatory = $true)]
+        [int]$MaxLength,
+        
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('RichText', 'Text')]
+        [string]$FormatName = 'Text',
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('None', 'SystemRequired', 'ApplicationRequired', 'Recommended')]
+        [string]$RequiredLevel = 'None',
+
+        [switch]$AsHashtable,
+
+        [Parameter(Mandatory = $false)]
+        [Alias('Prefix')]
+        [string]$SolutionPrefix
+    )
+
+    $TypeName = 'Memo'
+    $Ret = Get-BasicAttributeDefintion -TypeName $TypeName -LogicalName $LogicalName -SchemaName $SchemaName
+    $Ret += [ordered]@{
+        MaxLength     = $MaxLength
+        FormatName    = @{
+            Value = $FormatName
+        }
+    }
+    Add-DisplayName $Ret $DisplayName
+    Add-Description $Ret $Description
+    Add-RequiredLevel $Ret $RequiredLevel
+
+    $AsHashtable.IsPresent ?  $Ret : ($Ret | ConvertTo-Json -Depth 99) 
+}
+
+function New-MoneyAttributeDefinition {
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern('^[a-z][a-z0-9_]+[a-z0-9]$')]
+        [string]$LogicalName,
+        
+        [Parameter(Mandatory = $false)]
+        [string]$SchemaName = $LogicalName,
+        
+        [Parameter(Mandatory = $true)]
+        [string]$DisplayName,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Description,
+        
+        [Parameter(Mandatory = $false)]
+        [int]$MinValue = [int]::MinValue,
+
+        [Parameter(Mandatory = $false)]
+        [int]$MaxValue = [int]::MaxValue,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('None', 'SystemRequired', 'ApplicationRequired', 'Recommended')]
+        [string]$RequiredLevel = 'None',
+
+        [switch]$AsHashtable,
+
+        [Parameter(Mandatory = $false)]
+        [Alias('Prefix')]
+        [string]$SolutionPrefix
+    )
+
+    $TypeName = 'Money'
+    $Ret = Get-BasicAttributeDefintion -TypeName $TypeName -LogicalName $LogicalName -SchemaName $SchemaName
+    # type specific properties
+    $Ret.MinValue = $MinValue
+    $Ret.MaxValue = $MaxValue
+    # type specific properties - end
+    Add-DisplayName $Ret $DisplayName
+    Add-Description $Ret $Description
+    Add-RequiredLevel $Ret $RequiredLevel
+    
+    $AsHashtable.IsPresent ?  $Ret : ($Ret | ConvertTo-Json -Depth 99) 
+}
+

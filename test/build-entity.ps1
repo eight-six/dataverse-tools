@@ -6,72 +6,66 @@ $ErrorActionPreference = 'Stop'
 
 # . "$PSScriptRoot\test-bootstrap.ps1"
 . "$PSScriptRoot\..\src\modules\eight-six.dataverse-tools\nested\builder.ps1"
+$SchemaNamePrefix = 'new'
 
 $EntityParams = [ordered]@{
-    LogicalName           = 'cr86f_lorem_ipsum' 
-    SchemaName            = 'cr86f_lorem_ipsum' 
-    DisplayName           = 'Lorem Ipsum' 
-    Description           = 'Lorem Ipsum created via API'
-    DisplayCollectionName = 'Lorem Ipsums' 
-    # PrimaryIdAttribute = "cr86f_testentityid" 
-    # PrimaryNameAttribute "cr86f_name" 
-    #SchemaNamePrefix = "cr86f" 
+    LogicalName           = "$($SchemaNamePrefix)_trustee_discretion" 
+    SchemaName            = "$($SchemaNamePrefix)_trustee_discretion" 
+    DisplayName           = 'Trustee Discretion' 
+    Description           = 'Trustee Discretion created via API'
+    DisplayCollectionName = 'Trustee Discretions'
+    #SchemaNamePrefix = "new" 
 }
 
-$FamilyNameAttributeParams = [ordered]@{
-    LogicalName = 'cr86f_family_name' 
-    SchemaName  = 'cr86f_family_name' 
-    DisplayName = 'Family Name' 
-    Description = 'Family Name aka Last Name, Surname'
+$PrimaryNameAttributeParams = [ordered]@{
+    LogicalName = "$($SchemaNamePrefix)_primary_name"
+    SchemaName  = "$($SchemaNamePrefix)primary_name"
+    DisplayName = 'Case Number' 
+    Description = 'unique case number for the trustee discretion'
+    MaxLength   = 12  # TX-YYYY-NNNN
+    IsPrimary   = $true
+    FormatName = 'mutiline'
+
+    #SchemaNamePrefix = "new" 
+    
+}
+
+$SynopsisAttributeParams = [ordered]@{
+    LogicalName = "$($SchemaNamePrefix)_synopsis"
+    SchemaName  = "$($SchemaNamePrefix)_synopsis"
+    DisplayName = "Synopsis"
+    Description = "Synopsis..."
     MaxLength   = 50
     IsPrimary   = $false
-
     #SchemaNamePrefix = "cr86f" 
 }
 
-$GivenNameAttributeParams = [ordered]@{
-    LogicalName = 'cr86f_given_name' 
-    SchemaName  = 'cr86f_given_name' 
-    DisplayName = 'Given Name' 
-    Description = 'Given Name aka First Name'
+$RulesAttributeParams = [ordered]@{
+    LogicalName = "$($SchemaNamePrefix)_rules"
+    SchemaName  = "$($SchemaNamePrefix)_rules"
+    DisplayName = "Rules"
+    Description = "Rules..."
     MaxLength   = 50
-    IsPrimary   = $true
+    IsPrimary   = $false
     #SchemaNamePrefix = "cr86f" 
 }
 
-$DateOfBirthAttributeParams = [ordered]@{
-    LogicalName = 'cr86f_date_of_birth' 
-    SchemaName  = 'cr86f_date_of_birth' 
-    DisplayName = 'Date of birth' 
-    Description = 'Date of birth'
-    Format      = 'DateOnly'
+$GuidanceAttributeParams = [ordered]@{
+    LogicalName = "$($SchemaNamePrefix)_guidance"
+    SchemaName  = "$($SchemaNamePrefix)_guidance"
+    DisplayName = "Guidance"
+    Description = "Guidance..."
+    MaxLength   = 50
+    IsPrimary   = $false
     #SchemaNamePrefix = "cr86f" 
 }
 
-$CommuteAttributeParams = [ordered]@{
-    LogicalName = 'cr86f_commute_distance' 
-    SchemaName  = 'cr86f_commute_distance' 
-    DisplayName = 'How far do you commute?' 
-    Description = 'Distance in miles from home to work'
-    MinValue    = 0
-    MaxValue    = 500
-    #SchemaNamePrefix = "cr86f" 
-}
-
-$IsActiveAttributeParams = [ordered]@{
-    LogicalName = 'cr86f_is_active' 
-    SchemaName  = 'cr86f_is_active' 
-    DisplayName = 'Is Active?' 
-    Description = 'Is the user an active employee?'
-    DefaultValue = $true
-    #SchemaNamePrefix = "cr86f" 
-}
 
 $Attributes = @(
-    New-StringAttributeDefinition @FamilyNameAttributeParams -AsHashtable
-    New-StringAttributeDefinition @GivenNameAttributeParams -AsHashtable
-    New-DateTimeAttributeDefinition @DateOfBirthAttributeParams -AsHashtable
-    New-IntegerAttributeDefinition @CommuteAttributeParams -AsHashtable
+    New-StringAttributeDefinition @PrimaryNameAttributeParams -AsHashtable
+    New-StringAttributeDefinition @SynopsisAttributeParams -AsHashtable
+    New-StringAttributeDefinition @RulesAttributeParams -AsHashtable
+    New-StringAttributeDefinition @GuidanceAttributeParams -AsHashtable
     # New-BooleanAttributeDefinition @IsActiveAttributeParams -AsHashtable
 )
 
